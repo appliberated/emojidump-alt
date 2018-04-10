@@ -1,0 +1,21 @@
+{
+    "name": "emojidump",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "workbox": "workbox generateSW"
+    },
+    "keywords": [],
+    "author": "PWALab",
+    "license": "MIT",
+    "eslintConfig": {
+        "env": {
+            "browser": true,
+            "es6": true
+        },
+        "extends": "eslint:recommended",
+        "parserOptions": {
+            "sourceType": "module"
+        }
+    }
+}
