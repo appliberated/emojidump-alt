@@ -2,6 +2,18 @@ body {
     font-family: 'Courier New', Courier, monospace;
 }
 
+p {
+    margin: 0 0 1rem 0;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+*[data-visible=false] {
+    display: none;
+}
+
 .header {
     align-items: center;
     background: #000;
@@ -11,6 +23,7 @@ body {
     padding: 0.5rem 1rem;
     position: fixed;
     right: 0;
+    top: 0;
 }
 
 .header label {
@@ -26,11 +39,15 @@ body {
     width: 100%;
 }
 
+.main {
+    padding: 4rem 1rem 1rem 1rem;
+}
+
 .dump {
     color: #ccc;    /* Give the text a gray color to help identify missing emojis */
     font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;
     margin: 0;
-    padding: 4rem 1rem 1rem 1rem;
+    /* padding: 1rem; */
     white-space: pre-line;
     word-break: break-all;
 }
@@ -47,10 +64,10 @@ body {
 
 .dump[data-zoom="3"] {
     font-size: 3rem;
-    line-height: 2;
+    line-height: 1.75;
 }
 
 .dump[data-zoom="4"] {
     font-size: 4rem;
-    line-height: 2;
+    line-height: 1.75;
 }
