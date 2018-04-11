@@ -3,117 +3,122 @@
  *  https://www.hwalab.com/emojidump/
  */
 
-/* eslint-disable no-console */
+/* eslint-disable no-console, max-statements */
 
+import * as helpers from "/scripts/helpers.js";
 import * as utils from "/scripts/utils.js";
 
 // [...new Set(emojiList.map(item => item.v))].sort((a, b) => a - b).join(", ")
-const UNICODE_VERSIONS = [1.1, 3.0, 3.2, 4.0, 4.1, 5.1, 5.2, 6.0, 6.1, 7.0, 8.0, 9.0, 10.0, 11.0];
+const unicodeVersions = [1.1, 3.0, 3.2, 4.0, 4.1, 5.1, 5.2, 6.0, 6.1, 7.0, 8.0, 9.0, 10.0, 11.0];
 
-const DEFAULT_ZOM = 2;
+const MIN_ZOOM = 1, MAX_ZOOM = 7;
 
-const CLI_OPTIONS = { UNICODE_VERSION: "-u", SHUFFLE: "-s", MAX: "-m", ZOOM: "-z", JOIN: "-j" }
+let sourceEmojis, curEmojis;
 
-let sourceEmojiList;
-let curEmojiList;
-const emojiDumpEl = document.getElementById("emojiDump");
+/**
+ * Get references to the required DOM elements.
+ */
+const dumpEl = document.getElementById("dump");
 const commandEl = document.getElementById("command");
 const feedbackEl = document.getElementById("feedback");
 const helpEl = document.getElementById("help");
 
+/**
+ * Performs the actual emojidump command.
+ * @param {string} argString The command line arguments.
+ * @returns {void}
+ */
+function execCommandInternal(argString) {
+    let valid, error, version, shuffle, max, join, zoom;
 
-fetch("/scripts/emoji.json")
-    .then((response) => response.json())
-    .then((data) => {
-        sourceEmojiList = data;
-        dumpCommand();
-    });
+    // Parse command line arguments
+    const args = utils.basicCLAParser(argString);
+    console.log("CLA", args);
 
+    // By default display all emojis
+    curEmojis = sourceEmojis.slice(0);
 
-function updateDump() {
-    let msg = "";
+    // Filter the emoji array by Unicode version if the unicode option is present and has a valid value
+    ({ valid, value: version, error } = helpers.checkOption(args, "unicode", value => unicodeVersions.includes(value)));
+    if (valid === false) return error;
+    if (valid) curEmojis = curEmojis.filter(el => el.v <= version);
+    version = version || unicodeVersions[unicodeVersions.length - 1];
+    const len = curEmojis.length;
 
-    const args = utils.basicCLAParser(commandEl.value);
-    console.log(args);
+    // Shuffle the emoji array if the shuffle option is on
+    ({ valid, value: shuffle, error } = helpers.checkOption(args, "shuffle", value => typeof value == typeof true));
+    if (valid === false) return error;
+    if (valid && shuffle) utils.shuffleArray(curEmojis);
 
-    // Parse the Unicode version argument
-    let version = UNICODE_VERSIONS[UNICODE_VERSIONS.length - 1];
-    if (args.hasOwnProperty(CLI_OPTIONS.UNICODE_VERSION)) {
-        version = args[CLI_OPTIONS.UNICODE_VERSION];
-        if (!UNICODE_VERSIONS.includes(version)) return { result: false, msg: `Invalid Unicode version: ${version}` };
+    // Slice the emoji array if the maximum option is present and has a valid value
+    ({ valid, value: max, error } = helpers.checkOption(args, "max", value => Number.isInteger(value)));
+    if (valid === false) return error;
+    if (valid && max < curEmojis.length) curEmojis = curEmojis.slice(0, max);
 
-        // Filter emojis by Unicode version
-        console.log(`Filtering Unicode ${version} emojis...`);
-        curEmojiList = sourceEmojiList.filter(el => el.v <= version);
-    } else {
-        // By default display all emojis
-        curEmojiList = sourceEmojiList.slice(0);
-    }
-    msg = `${curEmojiList.length.toLocaleString()} Unicode ${version.toFixed(1)} emojis`;
+    // Check if the join option is present and has a valid value
+    ({ valid, value: join, error } = helpers.checkOption(args, "join", value => typeof value == typeof true));
+    if (valid === false) return error;
 
-    // Parse the shuffle argument
-    if (args.hasOwnProperty(CLI_OPTIONS.SHUFFLE)) {
-        const shuffle = args[CLI_OPTIONS.SHUFFLE];
-        if (typeof shuffle != typeof true) return { result: false, msg: `Invalid shuffle option: ${shuffle}` };
+    // Dump the emojis, with no separator if the join option was passed
+    dumpEl.innerText = curEmojis.map(emoji => emoji.e).join(join ? "" : " ");
 
-        // Shuffle emoji array
-        if (shuffle) {
-            utils.shuffleArray(curEmojiList);
-            msg += ", shuffled";
-        }
-    }
+    // Apply zoom if the zoom option has a valid value
+    delete dumpEl.dataset.zoom;
+    ({ valid, value: zoom, error } = helpers.checkOption(args, "zoom", value => utils.isIntegerBetween(value, MIN_ZOOM, MAX_ZOOM)));
+    if (valid === false) return error;
+    if (valid) dumpEl.dataset.zoom = zoom;
 
-    // Parse the limit argument
-    if (args.hasOwnProperty(CLI_OPTIONS.MAX)) {
-        const max = args[CLI_OPTIONS.MAX];
-        if (!Number.isInteger(max)) return { result: false, msg: `Invalid maximum number of emojis to display: ${max}` };
-
-        // Slice emoji array
-        curEmojiList = curEmojiList.slice(0, max);
-        msg = `${max.toLocaleString()} of ${msg}`;
-    }
-    msg = `Dumped ${msg}`;
-
-    // Parse the join argument
-    let separator = " ";
-    if (args.hasOwnProperty(CLI_OPTIONS.JOIN)) {
-        const join = args[CLI_OPTIONS.JOIN];
-        if (typeof join != typeof true) return { result: false, msg: `Invalid join option: ${join}` };
-
-        if (join) separator = "";
-    }
-
-    // Do emoji dump
-    console.log(`Dumping ${curEmojiList.length} emojis with ${separator === "" ? "no" : "space"} separator...`);
-    emojiDumpEl.innerText = curEmojiList.map(emoji => emoji.e).join(separator);
-    msg = `${msg}, with ${separator === "" ? "no" : "space"} separator`;
-
-    // Parse the zoom argument
-    let zoom = DEFAULT_ZOM;
-    if (args.hasOwnProperty(CLI_OPTIONS.ZOOM)) {
-        zoom = args[CLI_OPTIONS.ZOOM];
-        if (!utils.isIntegerBetween(zoom, 1, 4)) return { result: false, msg: `Invalid zoom value: ${zoom}` };
-    }
-    emojiDumpEl.dataset.zoom = zoom;
-    msg += `, and a ${zoom}x zoom`;
-
-    // Update emoji count
-    document.title = `emojidump - ${curEmojiList.length} emojis`;
-
-    return { result: true, msg: msg };
+    // Return success and a command summary message
+    return { result: true, msg: helpers.commandFeedback(len, version, shuffle, max, join, zoom) };
 }
 
-function dumpCommand() {
-    const { result, msg } = updateDump();
-    console.log(result + msg);
-    emojiDumpEl.dataset.visible = result;
+/**
+ * Executes the emojidump command with the current command line arguments.
+ * @returns {void}
+ */
+function execCommand() {
+    const { result, msg } = execCommandInternal(commandEl.value);
+
+    // On success: show the emoji dump, on failure show the help screen; update the message
+    dumpEl.dataset.visible = result;
     helpEl.dataset.visible = !result;
     feedbackEl.innerText = msg;
 }
 
-commandEl.addEventListener("keyup", (event) => {
-    if (event.which === 13) {
-        commandEl.blur();
-        dumpCommand();
-    }
-});
+/**
+ * Shows an app error message to the user.
+ * @param {Object} error The error object.
+ * @returns {void}
+ */
+function showAppError(error) {
+    commandEl.dataset.visible = dumpEl.dataset.visible = helpEl.dataset.visible = false;
+    feedbackEl.innerText = `Cannot load emojis! ${error}`;
+    console.error(error);
+}
+
+/**
+ * Initializes the app.
+ * @returns {void}
+ */
+function initApp() {
+    commandEl.addEventListener("keyup", event => {
+        if (event.which === 13) {
+            commandEl.blur();
+            execCommand();
+        }
+    });
+
+    // Fetch the emoji JSON file; on success execute the emojidump command, on failure show error message
+    fetch("/scripts/emoji.json")
+        .then(response => {
+            if (!response.ok) throw Error(response.statusText);
+            return response.json();
+        })
+        .then(response => {
+            sourceEmojis = response;
+            execCommand();
+        })
+        .catch(error => showAppError(error));
+}
+
+initApp();
