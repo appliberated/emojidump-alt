@@ -18,6 +18,7 @@
             "sourceType": "module"
         },
         "rules": {
+            "array-element-newline": "off",
             "arrow-parens": ["error", "as-needed"],
             "dot-location": "off",
             "curly": ["error", "multi-line"],

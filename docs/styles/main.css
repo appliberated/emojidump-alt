@@ -1,4 +1,5 @@
 body {
+    color: #000;
     font-family: "Inconsolata", "Lucida Console", Monaco, monospace;
 }
 
@@ -6,45 +7,75 @@ p {
     margin: 0 0 1rem 0;
 }
 
-pre {
-    white-space: pre-wrap;
+h2 {
+    margin: 0 0 1.25rem 0;
 }
 
-*[data-visible=false] {
+hr {
+    border: none;
+    background: rgba(0, 0, 0, 0.25);
+    height: 1px;
+    margin: 1.5rem 0;
+}
+
+/* *[data-visible="false"] {
+    display: none;
+} */
+
+.hidden {
     display: none;
 }
 
-.header {
+.toolbar {
     align-items: center;
     background: #FFCC22;
-    /* color: #fff; */
+    box-sizing: border-box;
     display: flex;
     left: 0;
+    min-height: 64px;
     padding: 0.5rem 1rem;
     position: fixed;
     right: 0;
     top: 0;
 }
 
-.header label {
-    margin-right: 0.5rem;
+.toolbar__title {
+    /* font-size: 1.25rem; */
+    font-weight: 700;
+}
+
+.toolbar__button {
+    background: inherit;
+    border: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    outline-color: rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0.75rem;
 }
 
 .command {
+    /* background: rgba(255, 255, 255, 0.15); */
     background: inherit;
-    border: none;
+    /* border: none; */
+    border: 1px solid rgba(0, 0, 0, 0.05);
     /* color: #fff; */
     outline-color: rgba(0, 0, 0, 0.1);
+    /* padding: 0.5rem 0.25rem; */
+    /* padding: 0.75rem 0.5rem; */
     padding: 0.5rem;
+    margin: 0 0.5rem;
     width: 100%;
 }
 
 .main {
-    padding: 4rem 1rem 1rem 1rem;
+    padding: 5rem 1rem 1rem 1rem;
 }
 
 .dump {
-    color: #ccc;    /* Give the text a gray color to help identify missing emojis */
+    /* Give the text a gray color to help identify missing emojis */
+    color: #ccc;    
+    /* color: #ff0000;
+    font-weight: bold; */
     font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;
     font-size: 2rem;
     line-height: 1.5;
@@ -88,4 +119,26 @@ pre {
 .dump[data-zoom="7"] {
     font-size: 4rem;
     line-height: 1.75;
+}
+
+/* .feedback {
+    margin-bottom: 2rem;
+} */
+
+.feedback--error {
+    color: #FF0000;
+    font-weight: bold;
+}
+
+.help dt {
+    font-weight: bold;
+}
+
+.help dd {
+    margin: 0 0 1rem 0;
+}
+
+.example {
+    font-size: 1.25rem;
+    font-weight: bold;
 }

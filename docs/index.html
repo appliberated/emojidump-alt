@@ -1,35 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>emojidump</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">    
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
     <link rel="stylesheet" href="/styles/normalize.css">
     <link rel="stylesheet" href="/styles/main.css">
 
-    <meta name="theme-color" content="#FFCC22">
+    <!-- <meta name="theme-color" content="#FFCC22"> -->
+    <!-- <meta name="theme-color" content="#3399CC"> -->
+    <meta name="theme-color" content="#CCCCCC">
 </head>
+
 <body>
-    <header class="header">
-        <label for="command">emojidump</label>
-        <input type="text" class="command" id="command" value="-u:6 -m:100" placeholder="-u:6 -s -m:1000 -z:4 -j">
+    <header class="toolbar">
+        <label id="appLabel" class="toolbar__title">emojidump</label>
+        <input id="command" type="text" class="command hidden" value="" placeholder="-u:6.0 -s -m:100">
+        <button id="helpButton" class="toolbar__button hidden">?</button>
     </header>
 
     <main class="main">
-        <p id="dump" class="dump" data-zoom="2"></p>
+        <p id="dump" class="dump hidden" data-zoom="2"></p>
 
-        <p id="feedback"></p>
+        <p id="feedback" class="feedback"></p>
 
-        <section id="help">
-            <pre>
-        u   Filter emojis by Unicode version. Valid values are 1.1, 3.0, 3.2, 4.0, 4.1, 5.1, 5.2, 6.0, 6.1, 7.0, 8.0, 9.0, 10.0, or 11.0.
-            </pre>
+        <section id="help" class="help hidden">
+            <h2>emojidump Help</h2>
+            <!-- <p>Type options in the text input field at the top of the app. To execute the command: press or tap Enter on your keyboard, or click or tap the <i>emojidump</i> label in the top left corner of the app.</p> -->
+            <p>Type options in the text input field at the top of the app, and press or tap Enter to execute the command. You can also click or tap the <i>emojidump</i> label in the top left corner of the app to (re)execute the command.</p>
+            <hr>
+            <p>Example command (click or tap to use):</p>
+            <p id="exampleCmd" class="example" data-command="-u:6.0 -s -m:1000 -z:1">emojidump -u:6.0 -s -m:1000 -z:1</p>
+            <p>This command will dump 1,000 (random) Unicode 6.0 emojis, in random order, with the default space separator, and a 1x zoom.</p>
+            <hr>
+            <p><b>Usage:</b> emojidump [OPTION]... </p>
+            <dl>
+                <dt>-u:VERSION</dt>
+                <dd>Filter emojis by Unicode version. Valid values are 1.1, 3.0, 3.2, 4.0, 4.1, 5.1, 5.2, 6.0, 6.1, 7.0, 8.0,
+                    9.0, 10.0, or 11.0.</dd>
+                <dt>-s</dt>
+                <dd>Display emojis in random order (shuffle).</dd>
+                <dt>-m:MAX</dt>
+                <dd>Specify a maximum number of emojis to display.</dd>
+                <dt>-j</dt>
+                <dd>Join emojis instead of separating them with spaces (which is the default behaviour).</dd>
+                <dt>-z:LEVEL</dt>
+                <dd>Sets the "zoom" level. The specified value must be between 1 and 7.</dd>
+            </dl>
         </section>
     </main>
 
     <script type="module" src="/scripts/main.js"></script>
 
 </body>
+
 </html>

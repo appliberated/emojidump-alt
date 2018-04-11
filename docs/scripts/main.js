@@ -21,6 +21,7 @@ let sourceEmojis, curEmojis;
 const dumpEl = document.getElementById("dump");
 const commandEl = document.getElementById("command");
 const feedbackEl = document.getElementById("feedback");
+const helpButton = document.getElementById("helpButton");
 const helpEl = document.getElementById("help");
 
 /**
@@ -80,9 +81,11 @@ function execCommand() {
     const { result, msg } = execCommandInternal(commandEl.value);
 
     // On success: show the emoji dump, on failure show the help screen; update the message
-    dumpEl.dataset.visible = result;
-    helpEl.dataset.visible = !result;
+    dumpEl.classList.toggle("hidden", !result);
+    helpEl.classList.toggle("hidden", result);
     feedbackEl.innerText = msg;
+    feedbackEl.classList.remove("hidden");
+    feedbackEl.classList.toggle("feedback--error", !result);
 }
 
 /**
@@ -91,9 +94,32 @@ function execCommand() {
  * @returns {void}
  */
 function showAppError(error) {
-    commandEl.dataset.visible = dumpEl.dataset.visible = helpEl.dataset.visible = false;
     feedbackEl.innerText = `Cannot load emojis! ${error}`;
     console.error(error);
+}
+
+/**
+ * Initializes event listeners.
+ * @returns {void}
+ */
+function initEvents() {
+    commandEl.classList.remove("hidden");
+    helpButton.classList.remove("hidden");
+
+    document.getElementById("exampleCmd").addEventListener("click", event => {
+        commandEl.value = event.target.dataset.command;
+        execCommand();
+    });
+
+    document.getElementById("appLabel").addEventListener("click", () => {
+        execCommand();
+    });
+
+    helpButton.addEventListener("click", () => {
+        dumpEl.classList.add("hidden");
+        feedbackEl.classList.add("hidden");
+        helpEl.classList.remove("hidden");
+    });
 }
 
 /**
@@ -117,6 +143,7 @@ function initApp() {
         .then(response => {
             sourceEmojis = response;
             execCommand();
+            initEvents();
         })
         .catch(error => showAppError(error));
 }

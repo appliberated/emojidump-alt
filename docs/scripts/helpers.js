@@ -1,11 +1,11 @@
 
 
 const claOptions = {
-    "unicode": { option: "-u", errorMsg: "Invalid Unicode version" },
-    "shuffle": { option: "-s", errorMsg: "Invalid shuffle option" },
-    "max": { option: "-m", errorMsg: "Invalid maximum number of emojis to display" },
-    "join": { option: "-j", errorMsg: "Invalid join option" },
-    "zoom": { option: "-z", errorMsg: "Invalid zoom value" }
+    unicode: { option: "-u", errorMsg: "Invalid Unicode version" },
+    shuffle: { option: "-s", errorMsg: "Invalid shuffle option" },
+    max: { option: "-m", errorMsg: "Invalid maximum number of emojis to display" },
+    join: { option: "-j", errorMsg: "Invalid join option" },
+    zoom: { option: "-z", errorMsg: "Invalid zoom value" }
 }
 
 export function checkOption(args, optionName, check) {
@@ -16,7 +16,7 @@ export function checkOption(args, optionName, check) {
         value = args[option.option];
         valid = check(value);
         if (!valid) {
-            error = { result: false, msg: `${option.errorMsg}:: ${value}` }
+            error = { result: false, msg: `${option.errorMsg}: ${value}` }
         }
     }
 
