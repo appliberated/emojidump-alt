@@ -1,5 +1,5 @@
 body {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Inconsolata", "Lucida Console", Monaco, monospace;
 }
 
 p {
@@ -16,8 +16,8 @@ pre {
 
 .header {
     align-items: center;
-    background: #000;
-    color: #fff;
+    background: #FFCC22;
+    /* color: #fff; */
     display: flex;
     left: 0;
     padding: 0.5rem 1rem;
@@ -27,15 +27,15 @@ pre {
 }
 
 .header label {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
 }
 
 .command {
-    background: #000;
+    background: inherit;
     border: none;
-    color: #fff;
-    outline-color: rgba(255, 255, 255, 0.25);
-    padding: 0.5rem 0;
+    /* color: #fff; */
+    outline-color: rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
     width: 100%;
 }
 
@@ -46,9 +46,9 @@ pre {
 .dump {
     color: #ccc;    /* Give the text a gray color to help identify missing emojis */
     font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;
-    margin: 0;
+    /* margin: 0; */
     /* padding: 1rem; */
-    white-space: pre-line;
+    /* white-space: pre-line; */
     word-break: break-all;
 }
 

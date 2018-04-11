@@ -5,19 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>emojidump</title>
 
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">    
     <link rel="stylesheet" href="/styles/normalize.css">
     <link rel="stylesheet" href="/styles/main.css">
+
+    <meta name="theme-color" content="#FFCC22">
 </head>
 <body>
     <header class="header">
         <label for="command">emojidump</label>
-        <input type="text" class="command" id="command" placeholder="u:6 s l:1000 z:4 j">
+        <input type="text" class="command" id="command" value="-m:50" placeholder="-u:6 -s -m:1000 -z:4 -j">
     </header>
 
     <main class="main">
-        <p id="feedback"></p>
+        <p id="emojiDump" class="dump" data-zoom="2"></p>
 
-        <pre id="emojiDump" class="dump" data-zoom="2"></pre>
+        <p id="feedback"></p>
 
         <section id="help">
             <pre>
